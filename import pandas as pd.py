@@ -1,297 +1,351 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, KFold
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')
+
+# Set random seed for reproducibility
+np.random.seed(42)
+
+print("="*60)
+print("ADVANCED AUTO MPG MACHINE LEARNING PIPELINE")
+print("="*60)
 
 # Load the dataset
-# Upload your autompg.csv file to Google Colab first
 df = pd.read_csv('auto-mpg.csv')
 
-print("Dataset Overview:")
-print(f"Shape: {df.shape}")
+print(f"Dataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
 print(f"Columns: {df.columns.tolist()}")
-print("\nFirst 5 rows:")
-print(df.head())
 
-print("\nDataset Info:")
-print(df.info())
-
-print("\nBasic Statistics:")
-print(df.describe())
-
-# Check for missing values
-print("\nMissing Values:")
-print(df.isnull().sum())
-
-# Check unique values in horsepower (likely contains '?' for missing values)
-print(f"\nUnique horsepower values: {df['horsepower'].unique()}")
-
-# Data Preprocessing
+# Advanced Data Preprocessing
 print("\n" + "="*50)
-print("DATA PREPROCESSING")
+print("ADVANCED DATA PREPROCESSING")
 print("="*50)
 
-# 1. Handle missing values in horsepower (replace '?' with NaN)
+# 1. Handle missing values in horsepower
+print("Step 1: Handling missing values...")
 df['horsepower'] = df['horsepower'].replace('?', np.nan)
-
-# Convert horsepower to numeric
 df['horsepower'] = pd.to_numeric(df['horsepower'])
 
-print(f"Missing values after conversion:")
-print(df.isnull().sum())
+missing_hp_count = df['horsepower'].isnull().sum()
+print(f"Missing horsepower values: {missing_hp_count}")
 
-# 2. Handle missing values - we'll use median imputation for horsepower
+# Use median imputation for horsepower
 df['horsepower'].fillna(df['horsepower'].median(), inplace=True)
+print(f"Imputed with median: {df['horsepower'].median():.1f}")
 
-print(f"Missing values after imputation:")
-print(df.isnull().sum())
+# 2. Advanced Feature Engineering
+print("\nStep 2: Advanced feature engineering...")
 
-# 3. Feature Engineering
-# Convert model year to actual year (assuming 70 means 1970)
+# Basic engineered features
 df['model_year_full'] = df['model year'] + 1900
-
-# Create age of car feature (assuming current year is 2024 for reference)
 df['car_age'] = 2024 - df['model_year_full']
-
-# Create power-to-weight ratio
 df['power_to_weight'] = df['horsepower'] / df['weight']
-
-# Create displacement per cylinder
 df['displacement_per_cylinder'] = df['displacement'] / df['cylinders']
 
-print("\nNew features created:")
-print("- model_year_full: Full year (1970-1982)")
-print("- car_age: Age of the car")
-print("- power_to_weight: Power to weight ratio")
-print("- displacement_per_cylinder: Displacement per cylinder")
+# Advanced engineered features
+df['weight_per_cylinder'] = df['weight'] / df['cylinders']
+df['horsepower_per_cylinder'] = df['horsepower'] / df['cylinders']
+df['efficiency_ratio'] = df['horsepower'] / df['displacement']
+df['power_density'] = df['horsepower'] / (df['displacement'] * df['cylinders'])
+df['acceleration_per_weight'] = df['acceleration'] / (df['weight'] / 1000)  # normalized by weight in tons
 
-# 4. Encode categorical variables
-# Origin can be treated as categorical (1=USA, 2=Europe, 3=Japan)
+# Logarithmic transformations for skewed features
+df['log_weight'] = np.log(df['weight'])
+df['log_displacement'] = np.log(df['displacement'])
+df['log_horsepower'] = np.log(df['horsepower'])
+
+# Polynomial features for key relationships
+df['weight_squared'] = df['weight'] ** 2
+df['horsepower_squared'] = df['horsepower'] ** 2
+df['displacement_squared'] = df['displacement'] ** 2
+
+# Interaction features
+df['weight_horsepower'] = df['weight'] * df['horsepower']
+df['displacement_horsepower'] = df['displacement'] * df['horsepower']
+df['cylinders_displacement'] = df['cylinders'] * df['displacement']
+
+# 3. Enhanced categorical encoding
+print("Step 3: Enhanced categorical encoding...")
+
+# One-hot encoding for origin
 df['origin_usa'] = (df['origin'] == 1).astype(int)
 df['origin_europe'] = (df['origin'] == 2).astype(int)
 df['origin_japan'] = (df['origin'] == 3).astype(int)
 
-# 5. Select features for modeling
-# Exclude car name as it's too specific and has too many unique values
-feature_columns = [
-    'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration',
-    'model year', 'model_year_full', 'car_age', 'power_to_weight',
-    'displacement_per_cylinder', 'origin_usa', 'origin_europe', 'origin_japan'
-]
+# Decade-based encoding for model year
+df['decade_70s'] = ((df['model year'] >= 70) & (df['model year'] < 80)).astype(int)
+df['decade_80s'] = (df['model year'] >= 80).astype(int)
 
-# Target variable
-target = 'mpg'
+# Cylinder category encoding
+df['cyl_4'] = (df['cylinders'] == 4).astype(int)
+df['cyl_6'] = (df['cylinders'] == 6).astype(int)
+df['cyl_8'] = (df['cylinders'] == 8).astype(int)
 
-# Create feature matrix and target vector
-X = df[feature_columns]
-y = df[target]
+print(f"Total engineered features: {len([col for col in df.columns if col not in ['mpg', 'car name']])}")
 
-print(f"\nFeature matrix shape: {X.shape}")
+# 4. Feature Selection
+print("\nStep 4: Feature selection based on correlation analysis...")
+
+# Select all numeric features except target and car name
+numeric_features = df.select_dtypes(include=[np.number]).columns.tolist()
+numeric_features.remove('mpg')  # Remove target variable
+
+# Calculate correlation with target
+correlations = df[numeric_features + ['mpg']].corr()['mpg'].abs().sort_values(ascending=False)
+print("\nTop 15 features by correlation with MPG:")
+print(correlations.head(15))
+
+# Select features with correlation > 0.1 and remove highly correlated features among themselves
+selected_features = []
+correlation_threshold = 0.1
+multicollinearity_threshold = 0.95
+
+for feature in correlations.index:
+    if feature != 'mpg' and correlations[feature] > correlation_threshold:
+        # Check for multicollinearity with already selected features
+        if not selected_features:
+            selected_features.append(feature)
+        else:
+            feature_corr_with_selected = df[selected_features + [feature]].corr()[feature].abs()
+            max_corr = feature_corr_with_selected.drop(feature).max()
+            if max_corr < multicollinearity_threshold:
+                selected_features.append(feature)
+
+print(f"\nSelected {len(selected_features)} features after correlation and multicollinearity filtering")
+print("Selected features:", selected_features)
+
+# Prepare feature matrix and target
+X = df[selected_features]
+y = df['mpg']
+
+print(f"\nFinal feature matrix shape: {X.shape}")
 print(f"Target vector shape: {y.shape}")
-print(f"\nSelected features: {feature_columns}")
 
-# 6. Check for correlations
-print("\nCorrelation with target variable (MPG):")
-correlations = df[feature_columns + [target]].corr()[target].sort_values(ascending=False)
-print(correlations)
-
-# 7. Split the data
+# 5. Advanced Train-Test Split with Stratification
 print("\n" + "="*50)
-print("TRAIN-TEST SPLIT")
+print("ADVANCED TRAIN-TEST SPLIT")
 print("="*50)
+
+# Create MPG bins for stratified sampling
+y_binned = pd.cut(y, bins=5, labels=['Low', 'Med-Low', 'Medium', 'Med-High', 'High'])
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=None
+    X, y, test_size=0.2, random_state=42, stratify=y_binned
 )
 
-print(f"Training set shape: {X_train.shape}")
-print(f"Test set shape: {X_test.shape}")
+print(f"Training set: {X_train.shape[0]} samples")
+print(f"Test set: {X_test.shape[0]} samples")
+print(f"Training target distribution: {y_train.describe()}")
 
-# 8. Feature Scaling
+# 6. Advanced Scaling and Pipeline Setup
 print("\n" + "="*50)
-print("FEATURE SCALING")
+print("MODEL PIPELINE SETUP")
 print("="*50)
 
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+# Create cross-validation strategy
+cv_strategy = KFold(n_splits=10, shuffle=True, random_state=42)
 
-print("Features have been standardized (mean=0, std=1)")
-print(f"Training set mean: {X_train_scaled.mean(axis=0).round(4)}")
-print(f"Training set std: {X_train_scaled.std(axis=0).round(4)}")
+# Define comprehensive parameter grids for hyperparameter tuning
+param_grids = {
+    'Linear Regression': {},
 
-# Convert back to DataFrame for easier handling
-X_train_scaled = pd.DataFrame(X_train_scaled, columns=feature_columns, index=X_train.index)
-X_test_scaled = pd.DataFrame(X_test_scaled, columns=feature_columns, index=X_test.index)
+    'Ridge Regression': {
+        'regressor__alpha': [0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0]
+    },
 
-# 9. Model Training and Evaluation
-print("\n" + "="*50)
-print("MODEL TRAINING AND EVALUATION")
-print("="*50)
+    'Lasso Regression': {
+        'regressor__alpha': [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0]
+    },
 
-# Initialize models
-models = {
-    'Linear Regression': LinearRegression(),
-    'Ridge Regression': Ridge(alpha=1.0, random_state=42),
-    'Lasso Regression': Lasso(alpha=0.1, random_state=42)
+    'ElasticNet': {
+        'regressor__alpha': [0.001, 0.01, 0.1, 0.5, 1.0, 2.0],
+        'regressor__l1_ratio': [0.1, 0.3, 0.5, 0.7, 0.9]
+    }
 }
 
-# Store results
+# Initialize models
+base_models = {
+    'Linear Regression': LinearRegression(),
+    'Ridge Regression': Ridge(random_state=42),
+    'Lasso Regression': Lasso(random_state=42, max_iter=2000),
+    'ElasticNet': ElasticNet(random_state=42, max_iter=2000)
+}
+
+# 7. Comprehensive Model Training and Hyperparameter Tuning
+print("\n" + "="*50)
+print("HYPERPARAMETER TUNING AND MODEL TRAINING")
+print("="*50)
+
+best_models = {}
+cv_results = {}
+
+for name, model in base_models.items():
+    print(f"\nTraining {name}...")
+
+    # Create pipeline with scaling
+    pipeline = Pipeline([
+        ('scaler', StandardScaler()),
+        ('regressor', model)
+    ])
+
+    # Perform hyperparameter tuning if parameters exist
+    if param_grids[name]:
+        grid_search = GridSearchCV(
+            pipeline,
+            param_grids[name],
+            cv=cv_strategy,
+            scoring='r2',
+            n_jobs=-1,
+            verbose=0
+        )
+        grid_search.fit(X_train, y_train)
+
+        best_models[name] = grid_search.best_estimator_
+        print(f"Best parameters for {name}: {grid_search.best_params_}")
+        print(f"Best CV R² score: {grid_search.best_score_:.4f}")
+
+    else:
+        # For Linear Regression (no hyperparameters)
+        pipeline.fit(X_train, y_train)
+        best_models[name] = pipeline
+
+        # Get CV scores manually
+        cv_scores = cross_val_score(pipeline, X_train, y_train, cv=cv_strategy, scoring='r2')
+        print(f"CV R² score: {cv_scores.mean():.4f} ± {cv_scores.std():.4f}")
+
+# 8. Comprehensive Model Evaluation
+print("\n" + "="*50)
+print("COMPREHENSIVE MODEL EVALUATION")
+print("="*50)
+
 results = {}
+feature_importance = {}
 
-for name, model in models.items():
-    print(f"\n{name}:")
-    print("-" * len(name))
+for name, model in best_models.items():
+    print(f"\n{name} Evaluation:")
+    print("-" * (len(name) + 12))
 
-    # Train the model
-    model.fit(X_train_scaled, y_train)
+    # Cross-validation scores
+    cv_r2_scores = cross_val_score(model, X_train, y_train, cv=cv_strategy, scoring='r2')
+    cv_mse_scores = -cross_val_score(model, X_train, y_train, cv=cv_strategy, scoring='neg_mean_squared_error')
+    cv_mae_scores = -cross_val_score(model, X_train, y_train, cv=cv_strategy, scoring='neg_mean_absolute_error')
 
-    # Make predictions
-    y_train_pred = model.predict(X_train_scaled)
-    y_test_pred = model.predict(X_test_scaled)
+    # Predictions
+    y_train_pred = model.predict(X_train)
+    y_test_pred = model.predict(X_test)
 
     # Calculate metrics
-    train_mse = mean_squared_error(y_train, y_train_pred)
-    test_mse = mean_squared_error(y_test, y_test_pred)
     train_r2 = r2_score(y_train, y_train_pred)
     test_r2 = r2_score(y_test, y_test_pred)
+    train_mse = mean_squared_error(y_train, y_train_pred)
+    test_mse = mean_squared_error(y_test, y_test_pred)
+    train_rmse = np.sqrt(train_mse)
+    test_rmse = np.sqrt(test_mse)
     train_mae = mean_absolute_error(y_train, y_train_pred)
     test_mae = mean_absolute_error(y_test, y_test_pred)
 
     # Store results
     results[name] = {
         'model': model,
-        'train_mse': train_mse,
-        'test_mse': test_mse,
+        'cv_r2_mean': cv_r2_scores.mean(),
+        'cv_r2_std': cv_r2_scores.std(),
+        'cv_mse_mean': cv_mse_scores.mean(),
+        'cv_mse_std': cv_mse_scores.std(),
+        'cv_mae_mean': cv_mae_scores.mean(),
+        'cv_mae_std': cv_mae_scores.std(),
         'train_r2': train_r2,
         'test_r2': test_r2,
+        'train_mse': train_mse,
+        'test_mse': test_mse,
+        'train_rmse': train_rmse,
+        'test_rmse': test_rmse,
         'train_mae': train_mae,
         'test_mae': test_mae,
-        'y_test_pred': y_test_pred
+        'y_test_pred': y_test_pred,
+        'overfitting': train_r2 - test_r2
     }
 
-    print(f"Training R²: {train_r2:.4f}")
-    print(f"Test R²: {test_r2:.4f}")
-    print(f"Training RMSE: {np.sqrt(train_mse):.4f}")
-    print(f"Test RMSE: {np.sqrt(test_mse):.4f}")
-    print(f"Training MAE: {train_mae:.4f}")
-    print(f"Test MAE: {test_mae:.4f}")
+    # Print results
+    print(f"Cross-Validation Results:")
+    print(f"  R² Score: {cv_r2_scores.mean():.4f} ± {cv_r2_scores.std():.4f}")
+    print(f"  MSE: {cv_mse_scores.mean():.4f} ± {cv_mse_scores.std():.4f}")
+    print(f"  RMSE: {np.sqrt(cv_mse_scores.mean()):.4f}")
+    print(f"  MAE: {cv_mae_scores.mean():.4f} ± {cv_mae_scores.std():.4f}")
 
-# 10. Feature Importance Analysis
+    print(f"\nTraining Set Performance:")
+    print(f"  R² Score: {train_r2:.4f}")
+    print(f"  MSE: {train_mse:.4f}")
+    print(f"  RMSE: {train_rmse:.4f}")
+    print(f"  MAE: {train_mae:.4f}")
+
+    print(f"\nTest Set Performance:")
+    print(f"  R² Score: {test_r2:.4f}")
+    print(f"  MSE: {test_mse:.4f}")
+    print(f"  RMSE: {test_rmse:.4f}")
+    print(f"  MAE: {test_mae:.4f}")
+
+    print(f"\nModel Characteristics:")
+    print(f"  Overfitting (Train R² - Test R²): {train_r2 - test_r2:.4f}")
+
+    # Feature importance analysis
+    if hasattr(model.named_steps['regressor'], 'coef_'):
+        coef = model.named_steps['regressor'].coef_
+        feature_imp = pd.DataFrame({
+            'Feature': selected_features,
+            'Coefficient': coef,
+            'Abs_Coefficient': np.abs(coef)
+        }).sort_values('Abs_Coefficient', ascending=False)
+
+        feature_importance[name] = feature_imp
+
+        print(f"\nTop 10 Most Important Features:")
+        print(feature_imp.head(10)[['Feature', 'Coefficient']].to_string(index=False))
+
+        # For Lasso, show feature selection
+        if 'Lasso' in name or 'ElasticNet' in name:
+            non_zero_features = (coef != 0).sum()
+            print(f"\nFeature Selection: {non_zero_features}/{len(selected_features)} features selected")
+
+# 9. Model Comparison and Ranking
 print("\n" + "="*50)
-print("FEATURE IMPORTANCE ANALYSIS")
+print("MODEL COMPARISON AND RANKING")
 print("="*50)
 
-# For Linear and Ridge Regression - coefficients
-for name in ['Linear Regression', 'Ridge Regression']:
-    print(f"\n{name} Coefficients:")
-    model = results[name]['model']
-    coef_df = pd.DataFrame({
-        'Feature': feature_columns,
-        'Coefficient': model.coef_
-    }).sort_values('Coefficient', key=abs, ascending=False)
-    print(coef_df)
+# Create comparison DataFrame
+comparison_data = []
+for name, result in results.items():
+    comparison_data.append({
+        'Model': name,
+        'CV_R2_Mean': result['cv_r2_mean'],
+        'CV_R2_Std': result['cv_r2_std'],
+        'Test_R2': result['test_r2'],
+        'Test_RMSE': result['test_rmse'],
+        'Test_MAE': result['test_mae'],
+        'Overfitting': result['overfitting']
+    })
 
-# For Lasso - show non-zero coefficients
-print(f"\nLasso Regression - Non-zero Coefficients:")
-lasso_model = results['Lasso Regression']['model']
-lasso_coef = pd.DataFrame({
-    'Feature': feature_columns,
-    'Coefficient': lasso_model.coef_
-})
-non_zero_coef = lasso_coef[lasso_coef['Coefficient'] != 0].sort_values('Coefficient', key=abs, ascending=False)
-print(non_zero_coef)
-print(f"Number of features selected by Lasso: {len(non_zero_coef)}")
+comparison_df = pd.DataFrame(comparison_data)
+comparison_df = comparison_df.sort_values('Test_R2', ascending=False)
 
-# 11. Data Visualization
-print("\n" + "="*50)
-print("CREATING VISUALIZATIONS")
-print("="*50)
+print("Model Performance Comparison (Ranked by Test R²):")
+print("=" * 80)
+print(comparison_df.to_string(index=False, float_format='%.4f'))
 
-# Set up the plotting style
-plt.style.use('default')
-sns.set_palette("husl")
+# Identify best model
+best_model_name = comparison_df.iloc[0]['Model']
+best_model_result = results[best_model_name]
 
-# Create subplots for visualizations
-fig, axes = plt.subplots(2, 3, figsize=(18, 12))
-fig.suptitle('Auto MPG Dataset Analysis and Model Performance', fontsize=16)
+print(f"\n🏆 BEST MODEL: {best_model_name}")
+print(f"   Test R² Score: {best_model_result['test_r2']:.4f}")
+print(f"   Test RMSE: {best_model_result['test_rmse']:.4f}")
+print(f"   Cross-Validation R²: {best_model_result['cv_r2_mean']:.4f} ± {best_model_result['cv_r2_std']:.4f}")
 
-# 1. Distribution of target variable
-axes[0, 0].hist(df['mpg'], bins=20, alpha=0.7)
-axes[0, 0].set_title('Distribution of MPG')
-axes[0, 0].set_xlabel('Miles Per Gallon')
-axes[0, 0].set_ylabel('Frequency')
-
-# 2. Correlation heatmap of top features
-top_features = correlations.abs().sort_values(ascending=False).head(8).index.tolist()
-corr_matrix = df[top_features].corr()
-sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', center=0, ax=axes[0, 1])
-axes[0, 1].set_title('Feature Correlation Heatmap')
-
-# 3. MPG vs Weight (strongest negative correlation)
-axes[0, 2].scatter(df['weight'], df['mpg'], alpha=0.6)
-axes[0, 2].set_title('MPG vs Weight')
-axes[0, 2].set_xlabel('Weight')
-axes[0, 2].set_ylabel('MPG')
-
-# 4. Model Performance Comparison
-model_names = list(results.keys())
-test_r2_scores = [results[name]['test_r2'] for name in model_names]
-test_rmse_scores = [np.sqrt(results[name]['test_mse']) for name in model_names]
-
-x_pos = np.arange(len(model_names))
-axes[1, 0].bar(x_pos, test_r2_scores)
-axes[1, 0].set_title('Model Performance (R² Score)')
-axes[1, 0].set_xlabel('Models')
-axes[1, 0].set_ylabel('R² Score')
-axes[1, 0].set_xticks(x_pos)
-axes[1, 0].set_xticklabels(model_names, rotation=45)
-
-# 5. Actual vs Predicted for best model
-best_model_name = max(results.keys(), key=lambda x: results[x]['test_r2'])
-best_predictions = results[best_model_name]['y_test_pred']
-axes[1, 1].scatter(y_test, best_predictions, alpha=0.6)
-axes[1, 1].plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', lw=2)
-axes[1, 1].set_title(f'Actual vs Predicted ({best_model_name})')
-axes[1, 1].set_xlabel('Actual MPG')
-axes[1, 1].set_ylabel('Predicted MPG')
-
-# 6. Residuals plot for best model
-residuals = y_test - best_predictions
-axes[1, 2].scatter(best_predictions, residuals, alpha=0.6)
-axes[1, 2].axhline(y=0, color='r', linestyle='--')
-axes[1, 2].set_title(f'Residuals Plot ({best_model_name})')
-axes[1, 2].set_xlabel('Predicted MPG')
-axes[1, 2].set_ylabel('Residuals')
-
-plt.tight_layout()
-plt.show()
-
-# 12. Summary
-print("\n" + "="*50)
-print("PREPROCESSING SUMMARY")
-print("="*50)
-print(f"• Original dataset: {df.shape[0]} rows, {df.shape[1]} columns")
-print(f"• Missing values handled: {6} missing horsepower values imputed with median")
-print(f"• New features created: 4 (model_year_full, car_age, power_to_weight, displacement_per_cylinder)")
-print(f"• Categorical encoding: Origin variable one-hot encoded")
-print(f"• Feature scaling: StandardScaler applied to all features")
-print(f"• Final feature set: {len(feature_columns)} features")
-print(f"• Train-test split: 80%-20%")
-
-print(f"\nBest performing model: {best_model_name}")
-print(f"Test R² Score: {results[best_model_name]['test_r2']:.4f}")
-print(f"Test RMSE: {np.sqrt(results[best_model_name]['test_mse']):.4f}")
-
-print("\nThe data is now ready for machine learning!")
-print("\nKey preprocessing steps completed:")
-print("✓ Missing value imputation")
-print("✓ Feature engineering")
-print("✓ Categorical encoding")
-print("✓ Feature scaling")
-print("✓ Train-test split")
-print("✓ Model training and evaluation")
+# 10. Advanced Visualizations
