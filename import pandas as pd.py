@@ -352,3 +352,4 @@ print(f"   Cross-Validation R²: {best_model_result['cv_r2_mean']:.4f} ± {best_
 #do not worry about the Internet
 #Model will be saved with click the commit changes botton
 #Master branch is intresting to change fundamental code 
+#print("I will start the new specefic season of my life after taking IELTS exam with out any dobt
