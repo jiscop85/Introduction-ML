@@ -356,4 +356,6 @@ print("="*50)
 
 # Set up plotting style
 plt.style.use('seaborn-v0_8')
+colors = ['#2E86AB', '#A23B72', '#F18F01', '#C73E1D']
+
 
