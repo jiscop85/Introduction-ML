@@ -352,3 +352,6 @@ print(f"   Cross-Validation R²: {best_model_result['cv_r2_mean']:.4f} ± {best_
 # 10. Advanced Visualizations
 print("\n" + "="*50)
 print("CREATING ADVANCED VISUALIZATIONS")
+print("="*50)
+
+# Set up plotting style
