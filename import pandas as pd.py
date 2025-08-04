@@ -355,3 +355,5 @@ print("CREATING ADVANCED VISUALIZATIONS")
 print("="*50)
 
 # Set up plotting style
+plt.style.use('seaborn-v0_8')
+
