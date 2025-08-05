@@ -361,6 +361,8 @@ colors = ['#2E86AB', '#A23B72', '#F18F01', '#C73E1D']
 # Create comprehensive visualization
 fig = plt.figure(figsize=(20, 16))
 
+# 1. Model Performance Comparison
+ax1 = fig.add_subplot(gs[0, :2])
 
 
 
