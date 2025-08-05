@@ -367,6 +367,8 @@ gs = fig.add_gridspec(4, 4, hspace=0.3, wspace=0.3)
 ax1 = fig.add_subplot(gs[0, :2])
 x_pos = np.arange(len(comparison_df))
 bars = ax1.bar(x_pos, comparison_df['Test_R2'], color=colors[:len(comparison_df)])
+ax1.set_title('Model Performance Comparison (Test R² Score)', fontsize=14, fontweight='bold')
+
 
 
 
