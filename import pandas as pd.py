@@ -360,9 +360,11 @@ colors = ['#2E86AB', '#A23B72', '#F18F01', '#C73E1D']
 
 # Create comprehensive visualization
 fig = plt.figure(figsize=(20, 16))
+gs = fig.add_gridspec(4, 4, hspace=0.3, wspace=0.3)
 
 # 1. Model Performance Comparison
 ax1 = fig.add_subplot(gs[0, :2])
+
 
 
 
