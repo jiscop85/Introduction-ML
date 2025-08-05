@@ -34,6 +34,7 @@ print("Step 1: Handling missing values...")
 df['horsepower'] = df['horsepower'].replace('?', np.nan)
 df['horsepower'] = pd.to_numeric(df['horsepower'])
 
+
 missing_hp_count = df['horsepower'].isnull().sum()
 print(f"Missing horsepower values: {missing_hp_count}")
 
@@ -364,6 +365,8 @@ gs = fig.add_gridspec(4, 4, hspace=0.3, wspace=0.3)
 
 # 1. Model Performance Comparison
 ax1 = fig.add_subplot(gs[0, :2])
+x_pos = np.arange(len(comparison_df))
+
 
 
 
