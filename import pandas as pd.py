@@ -369,6 +369,8 @@ x_pos = np.arange(len(comparison_df))
 bars = ax1.bar(x_pos, comparison_df['Test_R2'], color=colors[:len(comparison_df)])
 ax1.set_title('Model Performance Comparison (Test R² Score)', fontsize=14, fontweight='bold')
 ax1.set_xlabel('Models')
+ax1.set_ylabel('R² Score')
+
 
 
 
