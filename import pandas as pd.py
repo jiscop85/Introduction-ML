@@ -383,6 +383,8 @@ for i, bar in enumerate(bars):
 # 2. Cross-Validation Reliability
 ax2 = fig.add_subplot(gs[0, 2:])
 cv_means = comparison_df['CV_R2_Mean'].values
+cv_stds = comparison_df['CV_R2_Std'].values
+
 
 
 
