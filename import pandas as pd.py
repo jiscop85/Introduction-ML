@@ -381,6 +381,7 @@ for i, bar in enumerate(bars):
              f'{height:.3f}', ha='center', va='bottom', fontweight='bold')
 
 # 2. Cross-Validation Reliability
+ax2 = fig.add_subplot(gs[0, 2:])
 
 
 
