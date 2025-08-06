@@ -378,6 +378,8 @@ ax1.set_ylim(0, 1)
 for i, bar in enumerate(bars):
     height = bar.get_height()
     ax1.text(bar.get_x() + bar.get_width()/2., height + 0.01,
+             f'{height:.3f}', ha='center', va='bottom', fontweight='bold')
+
 
 
 
