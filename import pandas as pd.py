@@ -374,6 +374,8 @@ ax1.set_xticks(x_pos)
 ax1.set_xticklabels(comparison_df['Model'], rotation=45)
 ax1.set_ylim(0, 1)
 
+# Add value labels on bars
+for i, bar in enumerate(bars):
 
 
 
