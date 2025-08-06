@@ -371,6 +371,8 @@ ax1.set_title('Model Performance Comparison (Test R² Score)', fontsize=14, font
 ax1.set_xlabel('Models')
 ax1.set_ylabel('R² Score')
 ax1.set_xticks(x_pos)
+ax1.set_xticklabels(comparison_df['Model'], rotation=45)
+
 
 
 
