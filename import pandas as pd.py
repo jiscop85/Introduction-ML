@@ -376,6 +376,8 @@ ax1.set_ylim(0, 1)
 
 # Add value labels on bars
 for i, bar in enumerate(bars):
+    height = bar.get_height()
+    ax1.text(bar.get_x() + bar.get_width()/2., height + 0.01,
 
 
 
