@@ -400,6 +400,8 @@ ax3.plot([min_val, max_val], [min_val, max_val], 'r--', lw=2, label='Perfect Pre
 ax3.set_title(f'Actual vs Predicted - {best_model_name}', fontsize=14, fontweight='bold')
 ax3.set_xlabel('Actual MPG')
 ax3.set_ylabel('Predicted MPG')
+ax3.legend()
+
 
 
 
