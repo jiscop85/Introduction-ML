@@ -399,6 +399,8 @@ min_val, max_val = min(y_test.min(), best_predictions.min()), max(y_test.max(), 
 ax3.plot([min_val, max_val], [min_val, max_val], 'r--', lw=2, label='Perfect Prediction')
 ax3.set_title(f'Actual vs Predicted - {best_model_name}', fontsize=14, fontweight='bold')
 ax3.set_xlabel('Actual MPG')
+ax3.set_ylabel('Predicted MPG')
+
 
 
 
