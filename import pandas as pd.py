@@ -403,6 +403,9 @@ ax3.set_ylabel('Predicted MPG')
 ax3.legend()
 ax3.grid(True, alpha=0.3)
 
+# Add R² score to the plot
+
+
 
 
 
