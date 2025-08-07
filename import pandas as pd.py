@@ -392,6 +392,8 @@ ax2.set_xticklabels(comparison_df['Model'], rotation=45)
 ax2.grid(True, alpha=0.3)
 
 # 3. Actual vs Predicted for Best Model
+ax3 = fig.add_subplot(gs[1, :2])
+
 
 
 
