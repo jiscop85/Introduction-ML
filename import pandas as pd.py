@@ -385,6 +385,10 @@ ax2 = fig.add_subplot(gs[0, 2:])
 cv_means = comparison_df['CV_R2_Mean'].values
 cv_stds = comparison_df['CV_R2_Std'].values
 ax2.errorbar(x_pos, cv_means, yerr=cv_stds, fmt='o', capsize=5, capthick=2, linewidth=2)
+ax2.set_xlabel('Models')
+ax2.set_ylabel('CV R² Score')
+ax2.set_xticks(x_pos)
+ax2.set_xticklabels(comparison_df['Model'], rotation=45)
 
 
 
