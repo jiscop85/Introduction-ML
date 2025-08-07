@@ -401,6 +401,8 @@ ax3.set_title(f'Actual vs Predicted - {best_model_name}', fontsize=14, fontweigh
 ax3.set_xlabel('Actual MPG')
 ax3.set_ylabel('Predicted MPG')
 ax3.legend()
+ax3.grid(True, alpha=0.3)
+
 
 
 
