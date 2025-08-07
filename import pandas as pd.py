@@ -389,6 +389,8 @@ ax2.set_xlabel('Models')
 ax2.set_ylabel('CV R² Score')
 ax2.set_xticks(x_pos)
 ax2.set_xticklabels(comparison_df['Model'], rotation=45)
+ax2.grid(True, alpha=0.3)
+
 
 
 
