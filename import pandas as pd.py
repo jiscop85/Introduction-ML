@@ -395,6 +395,8 @@ ax2.grid(True, alpha=0.3)
 ax3 = fig.add_subplot(gs[1, :2])
 best_predictions = best_model_result['y_test_pred']
 ax3.scatter(y_test, best_predictions, alpha=0.7, color=colors[0], s=60)
+min_val, max_val = min(y_test.min(), best_predictions.min()), max(y_test.max(), best_predictions.max())
+
 
 
 
