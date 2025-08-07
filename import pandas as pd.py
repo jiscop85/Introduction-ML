@@ -404,6 +404,8 @@ ax3.legend()
 ax3.grid(True, alpha=0.3)
 
 # Add R² score to the plot
+ax3.text(0.05, 0.95, f'R² = {best_model_result["test_r2"]:.4f}',
+
 
 
 
