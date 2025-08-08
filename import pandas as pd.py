@@ -408,6 +408,9 @@ ax3.text(0.05, 0.95, f'R² = {best_model_result["test_r2"]:.4f}',
          transform=ax3.transAxes, fontsize=12, fontweight='bold',
          bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8))
 
+# 4. Residuals Analysis
+
+
 
 
 
