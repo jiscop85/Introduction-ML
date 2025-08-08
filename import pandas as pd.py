@@ -413,6 +413,8 @@ ax4 = fig.add_subplot(gs[1, 2:])
 residuals = y_test - best_predictions
 ax4.scatter(best_predictions, residuals, alpha=0.7, color=colors[1], s=60)
 ax4.axhline(y=0, color='r', linestyle='--', linewidth=2)
+ax4.set_title(f'Residuals Analysis - {best_model_name}', fontsize=14, fontweight='bold')
+
 
 
 
