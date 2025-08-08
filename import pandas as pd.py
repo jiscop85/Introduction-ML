@@ -416,6 +416,8 @@ ax4.axhline(y=0, color='r', linestyle='--', linewidth=2)
 ax4.set_title(f'Residuals Analysis - {best_model_name}', fontsize=14, fontweight='bold')
 ax4.set_xlabel('Predicted MPG')
 ax4.set_ylabel('Residuals')
+ax4.grid(True, alpha=0.3)
+
 
 
 
