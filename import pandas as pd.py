@@ -411,6 +411,8 @@ ax3.text(0.05, 0.95, f'R² = {best_model_result["test_r2"]:.4f}',
 # 4. Residuals Analysis
 ax4 = fig.add_subplot(gs[1, 2:])
 residuals = y_test - best_predictions
+ax4.scatter(best_predictions, residuals, alpha=0.7, color=colors[1], s=60)
+
 
 
 
