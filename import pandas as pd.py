@@ -441,6 +441,8 @@ for col in ['Test_RMSE', 'Test_MAE']:
     normalized_data[col] = 1 - (normalized_data[col] / normalized_data[col].max())
 
 x = np.arange(len(comparison_df))
+width = 0.25
+
 
 
 
