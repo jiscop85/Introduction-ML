@@ -425,6 +425,8 @@ if best_model_name in feature_importance:
     y_pos = np.arange(len(top_features))
     bars = ax5.barh(y_pos, top_features['Abs_Coefficient'], color=colors[2])
     ax5.set_title(f'Top 15 Feature Importance - {best_model_name}', fontsize=14, fontweight='bold')
+    ax5.set_xlabel('Absolute Coefficient Value')
+
 
 
 
