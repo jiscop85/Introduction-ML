@@ -428,6 +428,8 @@ if best_model_name in feature_importance:
     ax5.set_xlabel('Absolute Coefficient Value')
     ax5.set_yticks(y_pos)
     ax5.set_yticklabels(top_features['Feature'])
+    ax5.invert_yaxis()
+
 
 
 
