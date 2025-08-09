@@ -422,6 +422,8 @@ ax4.grid(True, alpha=0.3)
 if best_model_name in feature_importance:
     ax5 = fig.add_subplot(gs[2, :])
     top_features = feature_importance[best_model_name].head(15)
+    y_pos = np.arange(len(top_features))
+
 
 
 
