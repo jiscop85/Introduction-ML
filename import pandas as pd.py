@@ -433,6 +433,8 @@ if best_model_name in feature_importance:
 # 6. Model Comparison Metrics
 ax6 = fig.add_subplot(gs[3, :2])
 metrics = ['Test_R2', 'Test_RMSE', 'Test_MAE']
+metric_names = ['R² Score', 'RMSE', 'MAE']
+
 
 
 
