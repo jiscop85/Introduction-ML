@@ -431,6 +431,8 @@ if best_model_name in feature_importance:
     ax5.invert_yaxis()
 
 # 6. Model Comparison Metrics
+ax6 = fig.add_subplot(gs[3, :2])
+
 
 
 
