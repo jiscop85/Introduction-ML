@@ -435,6 +435,8 @@ ax6 = fig.add_subplot(gs[3, :2])
 metrics = ['Test_R2', 'Test_RMSE', 'Test_MAE']
 metric_names = ['R² Score', 'RMSE', 'MAE']
 
+# Normalize metrics for comparison (R² is already 0-1, normalize RMSE and MAE)
+
 
 
 
