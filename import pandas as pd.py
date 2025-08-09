@@ -437,6 +437,8 @@ metric_names = ['R² Score', 'RMSE', 'MAE']
 
 # Normalize metrics for comparison (R² is already 0-1, normalize RMSE and MAE)
 normalized_data = comparison_df[metrics].copy()
+for col in ['Test_RMSE', 'Test_MAE']:
+
 
 
 
