@@ -1,4 +1,4 @@
-import pandas as pd
+Vimport pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, KFold
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
@@ -427,6 +427,8 @@ if best_model_name in feature_importance:
     ax5.set_title(f'Top 15 Feature Importance - {best_model_name}', fontsize=14, fontweight='bold')
     ax5.set_xlabel('Absolute Coefficient Value')
     ax5.set_yticks(y_pos)
+    ax5.set_yticklabels(top_features['Feature'])
+
 
 
 
