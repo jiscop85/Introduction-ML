@@ -423,6 +423,8 @@ if best_model_name in feature_importance:
     ax5 = fig.add_subplot(gs[2, :])
     top_features = feature_importance[best_model_name].head(15)
     y_pos = np.arange(len(top_features))
+    bars = ax5.barh(y_pos, top_features['Abs_Coefficient'], color=colors[2])
+
 
 
 
