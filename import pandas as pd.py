@@ -457,6 +457,8 @@ ax6.grid(True, alpha=0.3)
 
 # 7. Learning Curves (Overfitting Analysis)
 ax7 = fig.add_subplot(gs[3, 2:])
+models_list = list(results.keys())
+
 
 
 
