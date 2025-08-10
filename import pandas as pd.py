@@ -445,6 +445,8 @@ width = 0.25
 
 for i, (metric, name) in enumerate(zip(metrics, metric_names)):
     offset = (i - 1) * width
+    ax6.bar(x + offset, normalized_data[metric], width, label=name, color=colors[i])
+
 
 
 
