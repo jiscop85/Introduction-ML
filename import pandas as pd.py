@@ -1,4 +1,4 @@
-Vimport pandas as pd
+import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, KFold
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
@@ -456,6 +456,8 @@ ax6.legend()
 ax6.grid(True, alpha=0.3)
 
 # 7. Learning Curves (Overfitting Analysis)
+ax7 = fig.add_subplot(gs[3, 2:])
+
 
 
 
