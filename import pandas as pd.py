@@ -452,6 +452,8 @@ ax6.set_xlabel('Models')
 ax6.set_ylabel('Normalized Score (Higher is Better)')
 ax6.set_xticks(x)
 ax6.set_xticklabels(comparison_df['Model'], rotation=45)
+ax6.legend()
+
 
 
 
