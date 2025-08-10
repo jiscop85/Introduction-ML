@@ -458,6 +458,8 @@ ax6.grid(True, alpha=0.3)
 # 7. Learning Curves (Overfitting Analysis)
 ax7 = fig.add_subplot(gs[3, 2:])
 models_list = list(results.keys())
+train_scores = [results[name]['train_r2'] for name in models_list]
+
 
 
 
