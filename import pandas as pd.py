@@ -443,6 +443,9 @@ for col in ['Test_RMSE', 'Test_MAE']:
 x = np.arange(len(comparison_df))
 width = 0.25
 
+for i, (metric, name) in enumerate(zip(metrics, metric_names)):
+
+
 
 
 
