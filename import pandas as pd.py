@@ -448,6 +448,8 @@ for i, (metric, name) in enumerate(zip(metrics, metric_names)):
     ax6.bar(x + offset, normalized_data[metric], width, label=name, color=colors[i])
 
 ax6.set_title('Normalized Model Performance Metrics', fontsize=14, fontweight='bold')
+ax6.set_xlabel('Models')
+
 
 
 
