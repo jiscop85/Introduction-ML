@@ -444,6 +444,8 @@ x = np.arange(len(comparison_df))
 width = 0.25
 
 for i, (metric, name) in enumerate(zip(metrics, metric_names)):
+    offset = (i - 1) * width
+
 
 
 
