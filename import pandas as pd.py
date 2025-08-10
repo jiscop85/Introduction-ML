@@ -450,6 +450,8 @@ for i, (metric, name) in enumerate(zip(metrics, metric_names)):
 ax6.set_title('Normalized Model Performance Metrics', fontsize=14, fontweight='bold')
 ax6.set_xlabel('Models')
 ax6.set_ylabel('Normalized Score (Higher is Better)')
+ax6.set_xticks(x)
+
 
 
 
