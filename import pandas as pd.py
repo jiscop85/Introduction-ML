@@ -451,6 +451,8 @@ ax6.set_title('Normalized Model Performance Metrics', fontsize=14, fontweight='b
 ax6.set_xlabel('Models')
 ax6.set_ylabel('Normalized Score (Higher is Better)')
 ax6.set_xticks(x)
+ax6.set_xticklabels(comparison_df['Model'], rotation=45)
+
 
 
 
