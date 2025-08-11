@@ -470,6 +470,8 @@ ax7.bar(x_pos + width/2, test_scores, width, label='Test R²', color=colors[1], 
 ax7.set_title('Training vs Test Performance (Overfitting Analysis)', fontsize=14, fontweight='bold')
 ax7.set_xlabel('Models')
 ax7.set_ylabel('R² Score')
+ax7.set_xticks(x_pos)
+
 
 
 
