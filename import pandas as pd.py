@@ -472,6 +472,8 @@ ax7.set_xlabel('Models')
 ax7.set_ylabel('R² Score')
 ax7.set_xticks(x_pos)
 ax7.set_xticklabels(models_list, rotation=45)
+ax7.legend()
+
 
 
 
