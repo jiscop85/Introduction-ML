@@ -471,6 +471,8 @@ ax7.set_title('Training vs Test Performance (Overfitting Analysis)', fontsize=14
 ax7.set_xlabel('Models')
 ax7.set_ylabel('R² Score')
 ax7.set_xticks(x_pos)
+ax7.set_xticklabels(models_list, rotation=45)
+
 
 
 
