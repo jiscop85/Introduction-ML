@@ -475,6 +475,8 @@ ax7.set_xticklabels(models_list, rotation=45)
 ax7.legend()
 ax7.grid(True, alpha=0.3)
 
+plt.suptitle('Comprehensive Auto MPG Machine Learning Analysis', fontsize=18, fontweight='bold', y=0.98)
+
 
 
 
