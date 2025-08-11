@@ -467,6 +467,8 @@ width = 0.35
 ax7.bar(x_pos - width/2, train_scores, width, label='Training R²', color=colors[0], alpha=0.8)
 ax7.bar(x_pos + width/2, test_scores, width, label='Test R²', color=colors[1], alpha=0.8)
 
+ax7.set_title('Training vs Test Performance (Overfitting Analysis)', fontsize=14, fontweight='bold')
+
 
 
 
