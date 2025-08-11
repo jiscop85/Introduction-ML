@@ -462,6 +462,8 @@ train_scores = [results[name]['train_r2'] for name in models_list]
 test_scores = [results[name]['test_r2'] for name in models_list]
 
 x_pos = np.arange(len(models_list))
+width = 0.35
+
 
 
 
