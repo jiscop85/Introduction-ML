@@ -489,6 +489,8 @@ print(f"   • Final features: {len(selected_features)}")
 print(f"   • Training samples: {X_train.shape[0]}")
 print(f"   • Test samples: {X_test.shape[0]}")
 
+print(f"\n🔧 PREPROCESSING HIGHLIGHTS:")
+
 
 
 
