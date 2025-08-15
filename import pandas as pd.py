@@ -484,6 +484,8 @@ print("FINAL SUMMARY AND RECOMMENDATIONS")
 print("="*60)
 
 print(f"\n📊 DATASET SUMMARY:")
+print(f"   • Original samples: {df.shape[0]}")
+
 
 
 
