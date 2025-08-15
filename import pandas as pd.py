@@ -493,6 +493,8 @@ print(f"\n🔧 PREPROCESSING HIGHLIGHTS:")
 print(f"   • Missing values handled: 6 horsepower values imputed")
 print(f"   • Feature engineering: {len([col for col in df.columns if col not in ['mpg', 'car name']]) - len(df.select_dtypes(include=[np.number]).columns) + 2} new features created")
 print(f"   • Feature selection: Correlation-based with multicollinearity filtering")
+print(f"   • Data scaling: StandardScaler applied in pipeline")
+
 
 
 
