@@ -491,6 +491,8 @@ print(f"   • Test samples: {X_test.shape[0]}")
 
 print(f"\n🔧 PREPROCESSING HIGHLIGHTS:")
 print(f"   • Missing values handled: 6 horsepower values imputed")
+print(f"   • Feature engineering: {len([col for col in df.columns if col not in ['mpg', 'car name']]) - len(df.select_dtypes(include=[np.number]).columns) + 2} new features created")
+
 
 
 
