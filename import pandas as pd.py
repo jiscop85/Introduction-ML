@@ -496,6 +496,8 @@ print(f"   • Feature selection: Correlation-based with multicollinearity filte
 print(f"   • Data scaling: StandardScaler applied in pipeline")
 
 print(f"\n🏆 BEST MODEL PERFORMANCE:")
+print(f"   • Model: {best_model_name}")
+
 
 
 
