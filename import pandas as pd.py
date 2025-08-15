@@ -486,6 +486,8 @@ print("="*60)
 print(f"\n📊 DATASET SUMMARY:")
 print(f"   • Original samples: {df.shape[0]}")
 print(f"   • Final features: {len(selected_features)}")
+print(f"   • Training samples: {X_train.shape[0]}")
+
 
 
 
