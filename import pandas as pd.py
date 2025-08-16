@@ -503,6 +503,8 @@ print(f"   • Cross-Validation R²: {best_model_result['cv_r2_mean']:.4f} ± {b
 print(f"   • Overfitting Score: {best_model_result['overfitting']:.4f} (lower is better)")
 
 print(f"\n📈 MODEL RELIABILITY:")
+print(f"   • Cross-validation used: 10-fold")
+
 
 
 
