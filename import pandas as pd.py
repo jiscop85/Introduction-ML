@@ -498,6 +498,8 @@ print(f"   • Data scaling: StandardScaler applied in pipeline")
 print(f"\n🏆 BEST MODEL PERFORMANCE:")
 print(f"   • Model: {best_model_name}")
 print(f"   • Test R² Score: {best_model_result['test_r2']:.4f}")
+print(f"   • Test MAE: {best_model_result['test_mae']:.4f} MPG")
+
 
 
 
