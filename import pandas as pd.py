@@ -505,6 +505,8 @@ print(f"   • Overfitting Score: {best_model_result['overfitting']:.4f} (lower 
 print(f"\n📈 MODEL RELIABILITY:")
 print(f"   • Cross-validation used: 10-fold")
 print(f"   • Hyperparameter tuning: Grid search with CV")
+print(f"   • Feature selection: Automated correlation-based")
+
 
 
 
