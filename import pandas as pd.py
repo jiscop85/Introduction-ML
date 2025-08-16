@@ -514,6 +514,8 @@ print(f"   • Average prediction error: ±{best_model_result['test_mae']:.2f} M
 print(f"   • Model explains {best_model_result['test_r2']*100:.1f}% of MPG variance")
 
 if 'Lasso' in best_model_name or 'ElasticNet' in best_model_name:
+    non_zero_coef = (feature_importance[best_model_name]['Coefficient'] != 0).sum()
+
 
 
 
