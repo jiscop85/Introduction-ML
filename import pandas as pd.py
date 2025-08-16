@@ -506,6 +506,8 @@ print(f"\n📈 MODEL RELIABILITY:")
 print(f"   • Cross-validation used: 10-fold")
 print(f"   • Hyperparameter tuning: Grid search with CV")
 print(f"   • Feature selection: Automated correlation-based")
+print(f"   • Pipeline approach: Prevents data leakage")
+
 
 
 
