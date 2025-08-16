@@ -510,6 +510,8 @@ print(f"   • Pipeline approach: Prevents data leakage")
 
 print(f"\n💡 KEY INSIGHTS:")
 print(f"   • Most important predictor: {feature_importance[best_model_name].iloc[0]['Feature']}")
+print(f"   • Average prediction error: ±{best_model_result['test_mae']:.2f} MPG")
+
 
 
 
