@@ -509,6 +509,8 @@ print(f"   • Feature selection: Automated correlation-based")
 print(f"   • Pipeline approach: Prevents data leakage")
 
 print(f"\n💡 KEY INSIGHTS:")
+print(f"   • Most important predictor: {feature_importance[best_model_name].iloc[0]['Feature']}")
+
 
 
 
