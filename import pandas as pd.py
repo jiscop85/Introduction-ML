@@ -500,6 +500,8 @@ print(f"   • Model: {best_model_name}")
 print(f"   • Test R² Score: {best_model_result['test_r2']:.4f}")
 print(f"   • Test MAE: {best_model_result['test_mae']:.4f} MPG")
 print(f"   • Cross-Validation R²: {best_model_result['cv_r2_mean']:.4f} ± {best_model_result['cv_r2_std']:.4f}")
+print(f"   • Overfitting Score: {best_model_result['overfitting']:.4f} (lower is better)")
+
 
 
 
