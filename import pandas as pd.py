@@ -515,6 +515,8 @@ print(f"   • Model explains {best_model_result['test_r2']*100:.1f}% of MPG var
 
 if 'Lasso' in best_model_name or 'ElasticNet' in best_model_name:
     non_zero_coef = (feature_importance[best_model_name]['Coefficient'] != 0).sum()
+    print(f"   • Feature selection: {non_zero_coef}/{len(selected_features)} features selected by {best_model_name}")
+
 
 
 
