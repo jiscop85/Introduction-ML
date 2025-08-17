@@ -523,6 +523,8 @@ print(f"   • Cross-validation confirms model stability")
 print(f"   • Comprehensive hyperparameter tuning performed")
 print(f"   • Feature engineering significantly improved performance")
 
+print(f"\n🎯 RECOMMENDED MODEL: {best_model_name}")
+
 
 
 
