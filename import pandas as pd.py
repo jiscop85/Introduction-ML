@@ -525,6 +525,8 @@ print(f"   • Feature engineering significantly improved performance")
 
 print(f"\n🎯 RECOMMENDED MODEL: {best_model_name}")
 print(f"   This model provides the best balance of accuracy, reliability, and generalization")
+print(f"   for predicting fuel efficiency in the Auto MPG dataset.")
+
 
 
 
