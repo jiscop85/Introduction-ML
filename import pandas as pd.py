@@ -519,6 +519,8 @@ if 'Lasso' in best_model_name or 'ElasticNet' in best_model_name:
 
 print(f"\n✅ QUALITY ASSURANCE:")
 print(f"   • All models show good generalization (low overfitting)")
+print(f"   • Cross-validation confirms model stability")
+
 
 
 
