@@ -20,6 +20,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
+				'vazir': ['Vazirmatn', 'Tahoma', 'Arial', 'sans-serif'],
+
 
 
 
