@@ -12,6 +12,8 @@ export default {
 	prefix: "",
 	theme: {
 		container: {
+			center: true,
+
 
 
 
