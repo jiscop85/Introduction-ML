@@ -28,6 +28,8 @@ export default {
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				foreground: 'hsl(var(--foreground))',
+				primary: {
+
 
 
 
