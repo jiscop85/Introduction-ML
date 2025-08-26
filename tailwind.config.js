@@ -10,7 +10,9 @@ export default {
 		"./src/**/*.{ts,tsx}",
 ],
 	prefix: "",
+	theme: {
 		container: {
+
 
 
 
