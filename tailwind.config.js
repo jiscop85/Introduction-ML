@@ -24,6 +24,8 @@ export default {
 				'display': ['Vazirmatn', 'Tahoma', 'Arial', 'sans-serif'],
 },
 			colors: {
+				border: 'hsl(var(--border))',
+
 
 
 
